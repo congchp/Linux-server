@@ -54,13 +54,13 @@
 
 ![img](https://cdn.nlark.com/yuque/0/2021/png/756577/1638928939131-03576a48-b194-481c-86f7-139dd3b022db.png)
 
-1. 分配固定大小的不同的块
+2. 分配固定大小的不同的块
 
 内存池内分别有16 byte，32byte...，这种固定大小的内存块。应用程序要申请内存，到相应大小的块中去获取。如果要申请大于1024 byte的内存，直接就申请一整块。这样就能够解决出现内存块越分越小的问题。
 
 ![img](https://cdn.nlark.com/yuque/0/2021/png/756577/1638929909663-da82c0c2-ec52-4406-8809-6b487e8f4dbe.png)
 
-1. 用hash table
+3. 用hash table
 
 ![img](https://cdn.nlark.com/yuque/0/2021/png/756577/1638930590617-b9738efa-6031-46bd-b94f-f2db886247b1.png)
 

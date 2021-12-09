@@ -1,133 +1,144 @@
+#include <stdlib.h>
 
-#define MP_ALIGNMENT 32
-#define MAX_ALLOC_BLOCK 4096
 
-typedef struct mp_node_s {
-    unsigned char *start;
-    unsigned char *end;
+#define ALIGNMENT 8
 
-    mp_node_s *next;
-    int flag;
+#define mp_align(n, alignment) (((n)+(alignment-1)) & ~(alignment-1))
+#define mp_align_ptr(p, alignment) (void *)((((size_t)p)+(alignment-1)) & ~(alignment-1))
+
+typedef struct _mp_node_s {
+
+    unsigned char *last; // 内存块中未分配内存的首地址
+    unsigned char *end; // 内存块的尾地址
+
+    struct _mp_node_s *next;
+
 } mp_node_s;
 
-typedef struct mp_large_s {
-    mp_large_s *next;
+
+typedef struct _mp_large_s {
+
+    struct _mp_large_s *next;
     void *alloc;
+
 } mp_large_s;
 
-typedef struct mp_pool_s {
-    size_t max;
-    mp_node_s *current;
+
+typedef struct _mp_pool_s {
+
+    mp_node_s *small;
     mp_large_s *large;
-    
-    mp_node_s head[0];
+
+    int size;
+
 } mp_pool_s;
 
-// create pool, init
-mp_pool_s* mp_create_pool(size_t size) {
-    mp_pool_s *p;
-    int ret = posix_memalign(&p, MP_ALIGNMENT, size + sizeof(mp_pool_s) + sizeof(mp_node_s));
-    if (ret) {
-        return NULL;
-    }
+void *mp_malloc(mp_pool_s *pool, int size);
 
-    p->max = size < MAX_ALLOC_BLOCK ? size : MAX_ALLOC_BLOCK;
-    p->current = p->head;
+mp_pool_s *mp_create_pool(int size) {
 
-    p->large = NULL;
+    mp_pool_s *pool;
 
-    p->head->start = (unsigned char *)p + sizeof(mp_pool_s) + sizeof(mp_node_s);
-    p->head->end = p->head->start + size;
+    int ret = posix_memalign((void **)&pool, ALIGNMENT, size + sizeof(mp_pool_s));
+    if (ret) return NULL;
 
-    p->flag = 0;
+    pool->small = (mp_node_s *)(pool + 1);
 
-    return p;
+    pool->small->last = (unsigned char *)(pool->small + 1);
+    pool->small->end = (unsigned char *)pool + size + sizeof(mp_pool_s);
+    pool->small->next = NULL;
+
+    pool->large = NULL;
+
+    return pool;
+
 }
 
-// destroy pool
 void mp_destroy_pool(mp_pool_s *pool) {
-    mp_large_s *l;
-    for (l = pool->large; l; l = l->next) {
-        if (l->alloc) {
-            free(l->alloc);
-        }
-    }
-
-    mp_node_s *n, *h = pool->head->next;
-    while (h) {
-        n = h->next;
-        free(h);
-        h = n;
-    }
-    
-    free(pool);
-
-}
-
-// pmalloc/calloc
-
-static void *mp_alloc_block(mp_pool_s *pool, size_t size) {
-    mp_node_s *h = pool->head;
-    size_t psize = (size_t)(h->end - (unsigned char*)h->head);
-    unsigned char *m = NULL;
-
-    int ret = posix_memalign(&m, MP_ALIGNMENT, psize + sizeof(mp_node_s));  // whether need sum sizeof(mp_node_s) ???
-    if (ret) {
-        return NULL;
-    }
-
-    mp_node_s *n = pool->current;
-    mp_node_s *new_node = (mp_node_s *)m;
-
-    new_node->next = pool->current;
-    pool->current = new_node;
-
-    pool->head = m + sizeof(mp_node_s); // it is OK? I think this line is no use.
-    new_node->start = m + sizeof(mp_node_s);
-    new_node->end = new_node->start + psize; // Is it psize? Should not be size?
-
-
-    return new_node->start;
-
-}
-
-static void *mp_alloc_large(mp_pool_s *pool, size_t size) {
-    void *p = NULL;
-    int ret = posix_memalign(&p, MP_ALIGNMENT, size);
 
     mp_large_s *large;
+
     for (large = pool->large; large; large = large->next) {
-        if (large->alloc == NULL) {
-            large->alloc = p;
-            return p;
+        if (large->alloc) {
+            free(large->alloc);
+        }
+    }
+
+    mp_node_s *small, *next;
+
+    for (small = pool->small; small;) {
+
+        next = small->next;
+        free(small);
+        small = next;
+    }
+
+    free(pool);
+}
+
+
+static void *mp_malloc_large(mp_pool_s *pool, int size) {
+
+    mp_large_s *large = (mp_large_s *)mp_malloc(pool, sizeof(mp_large_s));
+
+    int ret = posix_memalign((void **)&large->alloc, ALIGNMENT,  size);
+    if (ret) return NULL;
+
+    return large->alloc;
+
+}
+
+static void *mp_malloc_small(mp_pool_s *pool, int size) {
+
+    mp_node_s *node = NULL;
+    int ret = posix_memalign((void **)&node, ALIGNMENT,  pool->size);
+    if (ret) return NULL;
+
+    node->next = pool->small;
+    pool->small = node;
+
+    node->last = (unsigned char *)node + sizeof(mp_node_s);
+    node->end = (unsigned char *)node + pool->size;
+
+    return node->last;
+
+
+}
+
+void *mp_malloc(mp_pool_s *pool, int size) {
+
+    if (size < pool->size) {
+        mp_node_s *node = pool->small;
+
+        if (size < node->end - node->last) { // 需要考虑字节对齐
+            unsigned char *m = node->last;
+            node->last = m + size;
+            return m;
+
+        } else {
+            return mp_malloc_small(pool, size);
+        }
+    } else {
+        return mp_malloc_large(pool, size);
+    }
+
+}
+
+void *mp_free(mp_pool_s *pool, void *p) {
+
+    mp_large_s *large = NULL;
+    for (large = pool->large; large; large = large->next) {
+        if (large->alloc == ()p) {
+            free(large->alloc);
+            large->alloc = NULL;
+            break;
         }
     }
 }
 
-void *mp_alloc(mp_pool_s *pool, size_t size) {
-    if (size <= pool->max) {
-        mp_node_s *p = pool->current;
 
-        do {
-            unsigned char *m = p->start;
-            if (p->end - p->start >= size) {
-                p->start += size;
-                p->flag++;
-                return m;
-            }
-            p = p->next;
-
-        } while (p);
+int main() {
 
 
-        return mp_alloc_block(pool, size);
-    }
-
-    return mp_alloc_large(pool, size);
-}
-
-// free
-void mp_free(mp_pool_s *pool, void *p) {
 
 }
-

@@ -20,7 +20,14 @@ rbtree如果用在内存，意义不大。
 
 # btree的定义
 
-![img](https://cdn.nlark.com/yuque/0/2021/png/756577/1637809311523-19d0186f-a56b-41e5-94ba-29ac2c283ff5.png)
+一颗M阶B树T，满足以下条件
+
+1. 每个结点至多拥有M棵子树
+2. 根结点至少拥有两棵子树
+3. 除了根结点以外，其余每个分支结点至少拥有M/2棵子树
+4. 所有的叶子结点都在同一层上
+5. 有k棵子树的分支结点则存在k-1个关键字，关键字按照递增顺序进行排序
+6. 关键字数量满足ceil(M/2)-1 <= n <= M-1
 
 # btree和b+树的区别
 
@@ -63,7 +70,7 @@ rbtree如果用在内存，意义不大。
 
 
 
-![img](https://cdn.nlark.com/yuque/0/2021/png/756577/1639988112008-d75c4d6b-7a48-4ef7-bd0f-d6321cdd0580.png)
+![img](https://cdn.nlark.com/yuque/0/2021/png/756577/1640047127284-81641e13-b127-4734-9fc9-2f83c5673ba7.png)
 
 
 
@@ -79,7 +86,7 @@ rbtree如果用在内存，意义不大。
 
 如果要删除F，应该怎么做？先合并DEFGH,然后在叶子结点删除F
 
-![img](https://cdn.nlark.com/yuque/0/2021/png/756577/1637878369432-1f589ea5-ace4-4a3b-9171-6395cf5da129.png)
+![img](https://cdn.nlark.com/yuque/0/2021/png/756577/1640047267566-deac245c-5463-4335-b22c-69a4e42e097f.png)
 
 ## btree如何做到线程安全
 

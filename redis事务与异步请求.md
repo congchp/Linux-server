@@ -2,11 +2,12 @@
 
 ![img](https://cdn.nlark.com/yuque/0/2022/png/756577/1642569583955-0313cfa1-c63d-46a6-8ae2-43ae111ed3d1.png)
 
+redis使用的是单reactor网络模型，因为redis都是网络io，单reactor可以满足。
+
 为什么mysql每一条连接对应一个线程？
 
 mysql有网络io，磁盘io，涉及的操作比较多，需要有一个单独的线程来处理。使用单线程或者线程池都不太合适。
 
-redis使用的是单reactor网络模型，因为redis都是网络io，单reactor可以满足。
 
 # redis pipeline
 

@@ -1,6 +1,6 @@
-如何在[reactor](https://www.yuque.com/docs/share/344dfe37-2fc3-419a-b678-64a187dbd6da?# 《reactor百万连接的并发》)的基础上实现业务？就是怎么利用reactor做服务器，并实现服务器的业务。
+如何在[reactor](https://github.com/congchp/Linux-server/blob/main/reactor%E7%99%BE%E4%B8%87%E8%BF%9E%E6%8E%A5%E7%9A%84%E5%B9%B6%E5%8F%91.md)的基础上实现业务？就是怎么利用reactor做服务器，并实现服务器的业务。
 
-本文基于[reactor](https://www.yuque.com/docs/share/344dfe37-2fc3-419a-b678-64a187dbd6da?# 《reactor百万连接的并发》)，实现简单的http协议封装。只是为了说明reactor如何做业务，真正的http服务器业务逻辑是很复杂的。
+本文基于[reactor](https://github.com/congchp/Linux-server/blob/main/reactor%E7%99%BE%E4%B8%87%E8%BF%9E%E6%8E%A5%E7%9A%84%E5%B9%B6%E5%8F%91.md)，实现简单的http协议封装。只是为了说明reactor如何做业务，真正的http服务器业务逻辑是很复杂的。
 
 服务器网络这一层，如nginx、redis，核心是epoll，实现使用的是reactor。
 

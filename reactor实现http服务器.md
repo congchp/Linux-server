@@ -29,10 +29,9 @@ http使用的是reqeust-reply的模型进行通讯，客户端发送http请求�
 
 http的tcp链接的生命周期：
 
-1. 1. accept_cb
-   2. recv_cb
-
-1. 3. send_cb
+1. accept_cb
+2. recv_cb
+3. send_cb
 
 对于服务器，首先需要使用recv_cb接收http数据，通过拆包粘包得到一帧完整的http数据；之后对http数据进行解析处理；最后通过send_cb向客户端发送response。
 

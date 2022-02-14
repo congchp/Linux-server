@@ -81,7 +81,7 @@ HyperLogLog 原理是通过给定 n 个的元素集合，记录集合中数字�
 
 redis的hyperloglog中有16384(![img](https://cdn.nlark.com/yuque/__latex/bd2aadec076ac659d03c5fa1c50679e1.svg))个桶，每一个桶占6bit；
 
-hash生成64位整数，其中后14位用来索引桶子；前面50位用来统计低位连续为0的最大个数, 最大个数49。6bit对应的是![img](https://cdn.nlark.com/yuque/__latex/71280ad2e4fc24739bbf2e84f1764136.svg)对应的整数值64可以存储49。在设置前，要设置进桶的值是否大于桶中的旧值，如果大于才进行设置，否则不进行设置。
+对于一个要放入集合中的字符串，hash生成64位整数，其中后14位用来索引桶子；前面50位用来统计低位连续为0的最大个数, 最大个数49。6bit对应的是![img](https://cdn.nlark.com/yuque/__latex/71280ad2e4fc24739bbf2e84f1764136.svg)对应的整数值64可以存储49。在设置前，要设置进桶的值是否大于桶中的旧值，如果大于才进行设置，否则不进行设置。
 
 ![img](https://cdn.nlark.com/yuque/0/2022/png/756577/1644758047023-0aab891a-0d85-4179-97e0-4e8c2d446549.png)
 

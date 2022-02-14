@@ -57,7 +57,12 @@ bf.add bfkey userid
 
 布隆过滤器提供了一种节省内存的概率型数据结构，它不保存具体数据，存在误差。
 
-hyperloglog也是一种概率型数据结构，相对于布隆过滤器，使用的内存更少。redis提供了hyperloglog。在redis实现中，每个hyperloglog只是用固定的12kb进行计数，使用16384(![img](https://cdn.nlark.com/yuque/__latex/bd2aadec076ac659d03c5fa1c50679e1.svg))个桶子，标准误差为`0.8125%`，可以统计![img](https://cdn.nlark.com/yuque/__latex/5212463e37406b73b693fe832f7bc8c2.svg)个元素。
+hyperloglog也是一种概率型数据结构，相对于布隆过滤器，使用的内存更少。
+为什么叫hyperloglog？
+
+是因为空间复杂度非常低，是O(![img](https://cdn.nlark.com/yuque/__latex/4024c6197c760a384aac8d7ee5711ca5.svg))。
+
+redis提供了hyperloglog。在redis实现中，每个hyperloglog只是用固定的12kb进行计数，使用16384(![img](https://cdn.nlark.com/yuque/__latex/bd2aadec076ac659d03c5fa1c50679e1.svg))个桶子，标准误差为`0.8125%`，可以统计![img](https://cdn.nlark.com/yuque/__latex/5212463e37406b73b693fe832f7bc8c2.svg)个元素。
 
 ![img](https://cdn.nlark.com/yuque/0/2022/png/756577/1644757837969-0bb8b54d-ac8b-41d9-98d2-defd001a05a2.png)
 

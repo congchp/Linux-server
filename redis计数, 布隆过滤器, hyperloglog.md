@@ -1,6 +1,6 @@
 # redis计数
 
-![img](https://cdn.nlark.com/yuque/0/2022/png/756577/1644734422028-13a9ae97-d14c-4c85-806b-cc69ad30c0a7.png)
+![img](https://cdn.nlark.com/yuque/0/2022/png/756577/1644799023374-9978f663-e55d-4093-9fe2-5dd86898027b.png)
 
 # 布隆过滤器
 

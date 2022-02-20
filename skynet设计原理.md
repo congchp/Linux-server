@@ -131,6 +131,8 @@ memcached使用的自旋锁
 
 nginx解决惊群，使用自旋锁(cas实现自旋锁)，锁存放在共享内存中。
 
+关于mutex，spinlock，请参考《[锁和原子操作的实现](https://blog.csdn.net/congchp/article/details/122213293)》。
+
 
 
 ![img](https://cdn.nlark.com/yuque/0/2022/png/756577/1645328517835-2be3a628-2ef8-45c8-894a-85e2e0ef1d2d.png)

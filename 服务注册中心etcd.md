@@ -77,7 +77,7 @@ WATCH key
 TXN if/ then/ else ops
 -i, --interactive[=false] #Input transaction in interactive mode
 ```
-![image.png](https://cdn.nlark.com/yuque/0/2023/png/756577/1690254798124-4364445c-9d06-4da7-b733-73e68e05602e.png#averageHue=%23022557&clientId=u1bad425f-a672-4&from=paste&height=246&id=u4905a60b&originHeight=369&originWidth=1351&originalType=binary&ratio=1.5&rotation=0&showTitle=false&size=29485&status=done&style=none&taskId=u781bffe4-87bc-4622-9796-07d83781a5c&title=&width=900.6666666666666)
+![image.png](https://cdn.nlark.com/yuque/0/2023/png/756577/1690333110329-75886acc-be81-4dff-8123-12b486f407aa.png#averageHue=%23032657&clientId=u61ca0dc8-9033-4&from=paste&height=368&id=ue8f60ae6&originHeight=368&originWidth=1322&originalType=binary&ratio=1&rotation=0&showTitle=false&size=48578&status=done&style=none&taskId=u501b2e6a-873c-4aac-9c3e-10f6cd96dbb&title=&width=1322)
 ## 租约
 ```shell
 lease grant # 创建一个租约
